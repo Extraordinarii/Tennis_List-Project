@@ -1,0 +1,20 @@
+TASKS
+STAGE 1
+Migrate DB
+Create THRU & BELONGS relationship in class ::Base
+Create basic controller for create,repeat, update,delete
+Create SEED
+CREATE CLI - BASIC -  Login, Create Account, Exit
+
+STAGE 2
+Upgrade THRU & BELONG if necessary 
+Update CLI 
+Update Basic Controller if necessary 
+
+STAGE 3 - Attacking stage 
+We need to find ways to break our code 
+Then based on that update conditions inside CLI to prevent it
+from breaking
+
+STAGE 4 
+UPGRADE 
