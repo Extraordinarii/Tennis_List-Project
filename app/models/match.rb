@@ -1,5 +1,5 @@
 class Match < ActiveRecord::Base 
-    belongs_to :player_one
-    belongs_to :player_two 
+    attr_accessor :score
+    has_and_belongs_to_many :player 
 
 end

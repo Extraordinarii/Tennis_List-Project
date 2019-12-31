@@ -10,6 +10,7 @@ end
 desc 'start my app'
 task :start do 
   puts "App is starting, please do not shut down."
-  ActiveRecord::Base.logger = nil 
+  old_logger = ActiveRecord::Base.logger
+  ActiveRecord::Base.logger = nil
   system 'ruby bin/run.rb'
 end 

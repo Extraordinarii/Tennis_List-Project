@@ -2,7 +2,8 @@
 require_relative '../config/environment'
 
 def start
-    
+        old_logger = ActiveRecord::Base.logger
+        ActiveRecord::Base.logger = nil
     
     def update_my_list #this is the menu that holds add / delete 
         prompt = TTY::Prompt.new
@@ -63,6 +64,10 @@ def start
     end
 
     def login_screen
+        # pastel = Pastel.new   ##we make this into a pretty front page
+        # font = TTY::Font.new()
+        # puts pastel.yellow.bold.detach(font.write('Tennis things!'))
+
         prompt = TTY::Prompt.new 
 
         choices = [{name: "Login", value: 1},{name: 'Create an account', value: 2},{name: 'Exit', value: 3}]
@@ -110,32 +115,30 @@ def start
     login_screen
     end 
     login_screen ##calls the app to start up (the main login screen)
-    
-
-
-
-
-
 
     def current_list_of_players
+        Player.all
         #prompt return
         #return a list of players
     end 
 
     def print_follow_list #with new player 
+        
 
         #returns to update_my_list
     end 
 
     def add_players
             ##prompt will ask "what is the name of the player you want to find "
-            ##gets.chomp 
+            ##find_name = gets.chomp 
+            ## Player.all.find_by ?
             ##hey does gets.chomp == find_by name 
 
         ###after adding player, returns follow list that includes new player then sends back to follow menu 
         #see_my_list #this is follow menu
     end 
     def delete_players
+        
         ## returns prompt of list of all players you currently have followed
         ## then allows you to select to delete 
         ## at end of list, allow to exit/go back to 
@@ -143,3 +146,17 @@ def start
 
 end
 start()
+
+
+=begin 
+
+def prints_out_all_matches
+    match_array = []
+    Match.all.each do |match|
+        name = player.find_by(match.player_one_id)
+        name2 = player.find_by(match.player_two_id)
+        score = match. ##find a way to acquire Match.all.score 
+        match_array << name,name2,score
+    end 
+    match_array
+end 
