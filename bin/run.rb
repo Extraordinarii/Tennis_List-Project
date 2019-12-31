@@ -5,6 +5,29 @@ def start
         old_logger = ActiveRecord::Base.logger
         ActiveRecord::Base.logger = nil
 
+        def prints_out_all_matches
+            Match.all.each do |match|
+                player = Player.find(match.player_one_id)
+                player2 = Player.find(match.player_two_id)
+                puts player.name + " vs " + player2.name + " the final score; " + match.score
+            end 
+        end 
+
+        def delete_players(user_id)
+                prompt = TTY::Prompt.new 
+           value = 0
+                saved_data = Follow.all.select {|follow| follow.user_id == user_id}
+            input_value = prompt.select('Which person would you like to unfollow') do |menu|
+                saved_data.each do |follow| 
+                     menu.choice follow.player.name, value: follow.id
+                end 
+            end
+            Follow.delete(input_value[:value])
+            ## returns prompt of list of all players you currently have followed
+            ## then allows you to select to delete 
+            ## at end of list, allow to exit/go back to
+            follow_menu(user_id) 
+        end 
         def add_players(user_id)  ##passing user_id as soon as you log in 
             Player.all.each do |player| 
                 puts player.name
@@ -59,7 +82,12 @@ def start
         #puts out information regarding list of players that you have
         #while nil output "you currently aren't following anyone"
         
-        follow_list =  Follow.all.select {|follow| follow.user_id == user_id}
+         Follow.all.each do |follow| 
+         if follow.user_id == user_id
+            puts follow.player.name 
+         end 
+        end 
+        
         # ##outputs list of follows, prettify it later
         # if follow_list == nil 
         #     puts "hey you ain't got no follows"
@@ -80,7 +108,9 @@ def start
             follow_menu(user_id)  #list of players & search players
         elsif user_input == 2
             update_my_list(user_id)
-        elsif user_input == 3 #log out
+        elsif user_input == 3 #see matches
+            prints_out_all_matches
+        elsif user_input == 4 
             login_screen
         end
     end
@@ -88,7 +118,7 @@ def start
     def main_menu(user_id)
         puts "MAIN MENU"
         prompt = TTY::Prompt.new 
-        choices = [{name: "See my list", value: 1},{name: 'Update my list', value: 2},{name: 'Logout', value: 3}]
+        choices = [{name: "See my list", value: 1},{name: 'Update my list', value: 2},{name: 'See matches', value: 3},{name: 'Logout', value: 4}]
         ###choice # see my list, update my list(select from all, or search for specific players)
         user_input = prompt.select("Please make your choice", choices)
         main_menu_selector(user_input, user_id)
@@ -159,28 +189,11 @@ def start
         #returns to update_my_list
     end 
 
+    
+    
 
-    def delete_players
-        
-        ## returns prompt of list of all players you currently have followed
-        ## then allows you to select to delete 
-        ## at end of list, allow to exit/go back to 
-    end 
 
 end
 start()
 
 
-=begin 
-
-def prints_out_all_matches
-    match_array = []
-    Match.all.each do |match|
-        name = player.find_by(match.player_one_id)
-        name2 = player.find_by(match.player_two_id)
-        score = match. ##find a way to acquire Match.all.score 
-        match_array << name,name2,score
-    end 
-    match_array
-end 
-=end 
