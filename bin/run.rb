@@ -160,13 +160,14 @@ def start
         prompt = TTY::Prompt.new 
             username_input = prompt.ask("Username:")
             user = User.find_by(user_name: username_input)
-            if user == nil #### only say, the below after the password is entered ie; Wrong username or wrong password.
-                username_input = prompt.ask("Please enter the correct username. /n Username:")
+            while user == nil #### only say, the below after the password is entered ie; Wrong username or wrong password.
+                username_input = prompt.ask("Please enter the correct username." + "\n" + "Username:")
+                user = User.find_by(user_name: username_input)
              end
             user_password_input = prompt.mask("Password:")
-            if user.user_password != user_password_input 
-                puts "Incorrect password, to verify that you are human, please do this captcha"
-                    user = nil 
+            while user.user_password != user_password_input 
+                puts "Incorrect password, please enter the correct password"
+                user_password_input = prompt.mask("Password:")
             end 
             main_menu(user.id)
     end 
