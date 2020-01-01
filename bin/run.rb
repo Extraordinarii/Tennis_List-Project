@@ -42,6 +42,14 @@ def start
                     puts "You have followed: " + follow.player.name
                 end
                 end 
+                prompt = TTY::Prompt.new 
+                choice = [{name: "Yes", value: 1},{name: "No", value: 2}]
+                user_input = prompt.select("Would you like to add more players?", choice)
+                if user_input == 1 
+                    add_players(user_id)
+                elsif user_input == 2 
+                    follow_menu(user_id)
+                end 
             ##prompt will ask "what is the name of the player you want to find "
                 ##find_name = gets.chomp 
                 ## Player.all.find_by ?
@@ -49,7 +57,6 @@ def start
     
             ###after adding player, returns follow list that includes new player then sends back to follow menu 
             #follow_menu #this is follow menu
-           follow_menu(user_id)
         end 
         
     def update_my_list(user_id) #this is the menu that holds add / delete 
