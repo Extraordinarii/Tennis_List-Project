@@ -4,8 +4,8 @@ Match.destroy_all
 Player.destroy_all
 Player.reset_pk_sequence
 
-User.create(user_name: "Ben", user_password: "k") ## Create annoying thing that only allows over 4 characters
-User.create(user_name: "Al", user_password: "f")  ## and over 5 characters for password
+ ## Create annoying thing that only allows over 4 characters
+  ## and over 5 characters for password
 Player.create(name: "Roger")
 Player.create(name: "Rafa")
 Player.create(name: "Novak")

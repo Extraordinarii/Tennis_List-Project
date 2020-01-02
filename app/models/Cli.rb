@@ -1,11 +1,12 @@
 class CommandLineInterface
 
-    def prints_out_all_matches
+    def prints_out_all_matches(user_id)
         Match.all.each do |match|
             player = Player.find(match.player_one_id)
             player2 = Player.find(match.player_two_id)
             puts player.name + " vs " + player2.name + " the final score; " + match.score
-        end 
+        end
+        main_menu(user_id)
     end 
 
     def delete_players(user_id)
@@ -123,12 +124,6 @@ def follow_menu(user_id) #FOLLOW_MENU
     print "Your current list contains "
      current_list_of_players(user_id)
     
-    # ##outputs list of follows, prettify it later
-    # if follow_list == nil 
-    #     puts "hey you ain't got no follows"
-    # else
-    #     puts follow_list
-    #end 
     prompt = TTY::Prompt.new
     choices = [{name: "Update my list", value: 1},{name: 'Return to main menu', value: 2},{name: 'Logout', value: 3}]
     user_input = prompt.select("Please make your choice", choices)
@@ -144,7 +139,7 @@ def main_menu_selector(user_input, user_id)
     elsif user_input == 2
         update_my_list(user_id)
     elsif user_input == 3 #see matches
-        prints_out_all_matches
+        prints_out_all_matches(user_id)
     elsif user_input == 4 
         login_screen
     end
@@ -203,7 +198,9 @@ end
     def create_account ###if acc exists, loop w/ "create a different unique name"
     prompt = TTY::Prompt.new 
     username_input = prompt.ask("Enter a username you would like to use")
+    ##do an if statement here, that checks if username already exists, and is over 5 characters long
     user_password_input = prompt.mask("Please enter a password")
+    ##do an if statement, that checks if password is longer than 6 characters
     User.create(
         user_name: username_input,       ##implement minimum character required for name
         user_password: user_password_input  ##implement minimum character required for password
