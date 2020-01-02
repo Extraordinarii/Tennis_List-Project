@@ -141,6 +141,8 @@ def main_menu_selector(user_input, user_id)
     elsif user_input == 3 #see matches
         prints_out_all_matches(user_id)
     elsif user_input == 4 
+        fantasy_tennis(user_id)
+    elsif user_input == 5 
         login_screen
     end
 end
@@ -148,7 +150,7 @@ end
 def main_menu(user_id)
     puts "MAIN MENU"
     prompt = TTY::Prompt.new 
-    choices = [{name: "See my list", value: 1},{name: 'Update my list', value: 2},{name: 'See matches', value: 3},{name: 'Logout', value: 4}]
+    choices = [{name: "See my list", value: 1},{name: 'Update my list', value: 2},{name: 'See matches', value: 3},{name: 'Fantasy Tennis', value: 4},{name: 'Logout', value: 5}]
     ###choice # see my list, update my list(select from all, or search for specific players)
     user_input = prompt.select("Please make your choice", choices)
     main_menu_selector(user_input, user_id)
@@ -195,19 +197,120 @@ end
         main_menu(user.id)
     end 
 
+    def user_verification(username_input)
+        check_for_duplicates = User.all.each {|user| user.user_name == username_input}
+        if username_input.size > 4 
+            if check_for_duplicates == false 
+                return false 
+            else 
+                puts "Please enter a username that's not taken."
+            end 
+        else 
+            puts "Please enter a username longer than 4 characters."
+        end 
+    end 
+    #                username_input = prompt.ask("That username is already in use, please choose a different name")
+
+    def password_checker(user_password_input)
+        if user_password_input.size < 6
+            return false 
+        else 
+            return true 
+        end 
+        ##verify that the input is longer than 6 characters long
+    end 
+
     def create_account ###if acc exists, loop w/ "create a different unique name"
     prompt = TTY::Prompt.new 
-    username_input = prompt.ask("Enter a username you would like to use")
-    ##do an if statement here, that checks if username already exists, and is over 5 characters long
-    user_password_input = prompt.mask("Please enter a password")
+    username_input = prompt.ask("Please enter a username")
+            verification_process = user_verification(username_input)
+            
+    user_password_input = prompt.mask("Please enter a password that is longer than 6 characters ")
     ##do an if statement, that checks if password is longer than 6 characters
+    while password_checker == false do 
+        user_password_input = prompt.mask("Please enter a password longer than 6 characters")
+         password_checker(user_password_input)
+    end 
     User.create(
-        user_name: username_input,       ##implement minimum character required for name
+        user_name: verification_process,       ##implement minimum character required for name
         user_password: user_password_input  ##implement minimum character required for password
     )
     puts "Your account has been created!"
         login_screen
     end 
+
+    def fantasy_tennis(user_id)
+        prompt = TTY::Prompt.new
+        saved_data = Player.all
+        player1_input = prompt.select('Please select player one') do |menu|
+            saved_data.each do |player| 
+                 menu.choice player.name
+            end 
+        end
+        Player.delete(player1_input) 
+        player2_input = prompt.select('Please select player two') do |menu|
+            saved_data.each do |player|
+                menu.choice player.name
+            end 
+        end 
+        Player.create(player1_input)
+            player1_id = player1_input.id
+            random_gen_holder = fantasy_gen
+        Match.create(player_one_id: player1_input.id, player_two_id: player2_input.id, score: random_gen_holder)
+        main_menu(user_id)
+    end 
+
+    def fantasy_gen
+        a = rand(0..7)
+        b = 0
+        if a <= 4
+            b = 6 
+        end
+        if a == 5 || a == 6
+            b = 7
+        end
+        if a == 7
+            b = 6
+        end
+        c = rand(0..7)
+        d = 0 
+        if c <= 4
+            d = 6
+        end
+        if c == 5 || c == 6
+            d = 7
+        end
+        if c == 7 
+            d = 6 
+        end
+            if a > b && c > d 
+                puts "#{a}-#{b}, #{c}-#{d}"
+                puts "Player 1 has won the match"
+            elsif b > a && d > c 
+                puts "#{a}-#{b}, #{c}-#{d}"
+                puts "Player 2 has won the match"
+            else
+                e = rand(0..7)
+                f = 0
+                    if e <= 4
+                       f = 6 
+                    end
+                    if e == 5 || e == 6
+                       f = 7
+                    end
+                    if e == 7
+                    f = 6
+                    end
+                        if a > b && e > f || c > d && e > f 
+                            puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
+                            puts "Player 1 has won the match"
+                        else
+                            puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
+                            puts "Player 2 has won the match"
+                        end
+            end
+    end
+    
     def run 
         login_screen ##calls the app to start up (the main login screen)
     end 
