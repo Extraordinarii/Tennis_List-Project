@@ -4,7 +4,7 @@ class CommandLineInterface
         Match.all.each do |match|
             player = Player.find(match.player_one_id)
             player2 = Player.find(match.player_two_id)
-            puts player.name + " vs " + player2.name + " the final score; " + match.score
+            puts player.name + " vs " + player2.name + " the final score; " + match.score.to_s
         end
         main_menu(user_id)
     end 
@@ -185,6 +185,15 @@ end
     prompt = TTY::Prompt.new 
         username_input = prompt.ask("Username:")
         user = User.find_by(user_name: username_input)
+        if !user 
+        choices = [{name: "Retry", value:1},{name: "Go back", value: 2}]
+        input = prompt.select("Go back", choices)
+         if input == 2 
+            login_screen
+         elsif input == 1
+            account_login
+            end 
+        end 
         while user == nil 
             username_input = prompt.ask("Please enter the correct username." + "\n" + "Username:")
             user = User.find_by(user_name: username_input) 
@@ -198,21 +207,35 @@ end
     end 
 
     def user_verification(username_input)
-        check_for_duplicates = User.all.each {|user| user.user_name == username_input}
-        if username_input.size > 4 
-            if check_for_duplicates == false 
-                return false 
-            else 
-                puts "Please enter a username that's not taken."
+        prompt = TTY::Prompt.new
+        check_for_duplicates = User.all.find do |user| 
+            user.user_name == username_input 
+        end 
+        if username_input.size > 3 
+            if !check_for_duplicates
+                user_password_input = prompt.mask("Please enter a password that is longer than 6 characters ")
+                ##do an if statement, that checks if password is longer than 6 characters
+                while password_checker(user_password_input) == false do 
+                    user_password_input = prompt.mask("Please enter a password longer than 6 characters")
+                end 
+                        User.create(
+                        user_name: username_input,       ##implement minimum character required for name
+                        user_password: user_password_input  ##implement minimum character required for password
+                    )
+                
+                    puts "Your account has been created!"
+            else
+                puts "Please enter a different username"
             end 
         else 
-            puts "Please enter a username longer than 4 characters."
+            puts "Please enter a Username longer than #{username_input.size}"
         end 
     end 
     #                username_input = prompt.ask("That username is already in use, please choose a different name")
 
+
     def password_checker(user_password_input)
-        if user_password_input.size < 6
+        if !user_password_input || user_password_input.size < 6
             return false 
         else 
             return true 
@@ -221,21 +244,12 @@ end
     end 
 
     def create_account ###if acc exists, loop w/ "create a different unique name"
-    prompt = TTY::Prompt.new 
-    username_input = prompt.ask("Please enter a username")
-            verification_process = user_verification(username_input)
-            
-    user_password_input = prompt.mask("Please enter a password that is longer than 6 characters ")
-    ##do an if statement, that checks if password is longer than 6 characters
-    while password_checker == false do 
-        user_password_input = prompt.mask("Please enter a password longer than 6 characters")
-         password_checker(user_password_input)
-    end 
-    User.create(
-        user_name: verification_process,       ##implement minimum character required for name
-        user_password: user_password_input  ##implement minimum character required for password
-    )
-    puts "Your account has been created!"
+        prompt = TTY::Prompt.new 
+        username_input = prompt.ask("Please enter a username")
+        while username_input == nil 
+            username_input = prompt.ask("Please enter in a username, and not a blank space")
+        end 
+        user_verification(username_input)
         login_screen
     end 
 
@@ -244,44 +258,73 @@ end
         saved_data = Player.all
         player1_input = prompt.select('Please select player one') do |menu|
             saved_data.each do |player| 
-                 menu.choice player.name
+                 menu.choice player.name, value: player
             end 
         end
-        Player.delete(player1_input) 
         player2_input = prompt.select('Please select player two') do |menu|
             saved_data.each do |player|
-                menu.choice player.name
+                if player.name != player1_input[:value].name
+                    menu.choice player.name, value: player
+                end
             end 
         end 
-        Player.create(player1_input)
-            player1_id = player1_input.id
             random_gen_holder = fantasy_gen
-        Match.create(player_one_id: player1_input.id, player_two_id: player2_input.id, score: random_gen_holder)
+        Match.create(player_one_id: player1_input[:value].id, player_two_id: player2_input[:value].id, score: random_gen_holder)
         main_menu(user_id)
     end 
 
     def fantasy_gen
-        a = rand(0..7)
-        b = 0
-        if a <= 4
+        set1_winner_toggle = rand(0..1)
+        if set1_winner_toggle == 0 
+            a = rand(0..7)
+            b = 0
+            if a <= 4
             b = 6 
-        end
-        if a == 5 || a == 6
+            end
+            if a == 5 || a == 6
             b = 7
-        end
-        if a == 7
+            end
+            if a == 7
             b = 6
+            end
+        else 
+            b = rand(0..7)
+            a = 0
+            if b <= 4
+            a = 6 
+            end
+            if b == 5 || b == 6
+            a = 7
+            end
+            if b == 7
+            a = 6
+            end
         end
-        c = rand(0..7)
-        d = 0 
-        if c <= 4
+        set2_winner_toggle = rand(0..1)
+        if set2_winner_toggle == 0 
+            c = rand(0..7)
+            d = 0 
+            if c <= 4
             d = 6
-        end
-        if c == 5 || c == 6
+            end
+            if c == 5 || c == 6
             d = 7
-        end
-        if c == 7 
+            end
+            if c == 7 
             d = 6 
+            end
+        else
+            d = rand(0..7)
+            c = 0
+            if d <= 4
+            c = 6
+            end 
+            if d == 5 || d == 6
+            c = 7
+            end
+            if d == 7
+            c = 6
+            end
         end
             if a > b && c > d 
                 puts "#{a}-#{b}, #{c}-#{d}"
@@ -290,8 +333,10 @@ end
                 puts "#{a}-#{b}, #{c}-#{d}"
                 puts "Player 2 has won the match"
             else
-                e = rand(0..7)
-                f = 0
+                set3_winner_toggle = rand(0..1)
+                if set3_winner_toggle == 0 
+                    e = rand(0..7)
+                    f = 0
                     if e <= 4
                        f = 6 
                     end
@@ -301,15 +346,31 @@ end
                     if e == 7
                     f = 6
                     end
+                else
+                    f = rand(0..7)
+                    e = 0 
+                    if f <= 4
+                        e = 6
+                    end
+                    if f == 5 || f == 6
+                        e = 7
+                    end
+                    if f == 7 
+                    e = 6
+                    end
+                end
                         if a > b && e > f || c > d && e > f 
-                            puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
                             puts "Player 1 has won the match"
+                        puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
+                             "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
                         else
-                            puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
                             puts "Player 2 has won the match"
+                        puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
+                             "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
                         end
             end
     end
+    
     
     def run 
         login_screen ##calls the app to start up (the main login screen)

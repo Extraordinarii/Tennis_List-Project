@@ -1,4 +1,4 @@
 class Match < ActiveRecord::Base 
-    has_and_belongs_to_many :player 
+    has_many :player 
 
 end
