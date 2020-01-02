@@ -28,6 +28,17 @@ def start
             ## at end of list, allow to exit/go back to
             follow_menu(user_id) 
         end 
+        def add_players_conditionals
+            #this method should; 
+            #check if a duplicate follow exists within the database
+
+            #allow users to search by 1 or 2 characters 
+            #then it should bring up a prompt to allow users to add  based on search result
+            #and allow user to exit if they want too
+
+
+        end 
+
         def add_players(user_id)  ##passing user_id as soon as you log in 
             Player.all.each do |player| 
                 puts player.name
@@ -38,6 +49,7 @@ def start
             Follow.create(player_id: searched_data.id, user_id: user_id)
     
             Follow.all.each do |follow| 
+                
                 if follow.user_id == user_id 
                     puts "You have followed: " + follow.player.name
                 end
@@ -85,15 +97,36 @@ def start
             login_screen
         end
     end
+
+    def current_list_of_players(user_id)
+        array_containing_players = []
+        counter = 0
+        saved_data = Follow.all.select {|follow| follow.user_id == user_id}
+        if saved_data
+             saved_data.each do |follow| 
+                array_containing_players << follow.player.name
+                if counter == 0 
+                 puts "\n" + follow.player.name
+                 counter -= -1 
+                else 
+                    puts follow.player.name
+                end 
+             end 
+        end 
+        if array_containing_players.size == 0 
+            puts "no one, please add someone to see them in your list"
+        end 
+           puts "\n"
+        #prompt return
+        #return a list of players
+    end 
+
     def follow_menu(user_id) #FOLLOW_MENU
         #puts out information regarding list of players that you have
         #while nil output "you currently aren't following anyone"
-        
-         Follow.all.each do |follow| 
-         if follow.user_id == user_id
-            puts follow.player.name 
-         end 
-        end 
+        puts "\n"
+        print "Your current list contains "
+         current_list_of_players(user_id)
         
         # ##outputs list of follows, prettify it later
         # if follow_list == nil 
@@ -160,11 +193,11 @@ def start
         prompt = TTY::Prompt.new 
             username_input = prompt.ask("Username:")
             user = User.find_by(user_name: username_input)
-            while user == nil #### only say, the below after the password is entered ie; Wrong username or wrong password.
+            while user == nil 
                 username_input = prompt.ask("Please enter the correct username." + "\n" + "Username:")
-                user = User.find_by(user_name: username_input)
+                user = User.find_by(user_name: username_input) 
              end
-            user_password_input = prompt.mask("Password:")
+            user_password_input = prompt.mask("Password:") 
             while user.user_password != user_password_input 
                 puts "Incorrect password, please enter the correct password"
                 user_password_input = prompt.mask("Password:")
@@ -177,28 +210,14 @@ def start
         username_input = prompt.ask("Enter a username you would like to use")
         user_password_input = prompt.mask("Please enter a password")
         User.create(
-            user_name: username_input,
-            user_password: user_password_input
+            user_name: username_input,       ##implement minimum character required for name
+            user_password: user_password_input  ##implement minimum character required for password
         )
         puts "Your account has been created!"
     login_screen
     end 
     login_screen ##calls the app to start up (the main login screen)
 
-    def current_list_of_players
-        Player.all
-        #prompt return
-        #return a list of players
-    end 
-
-    def print_follow_list #with new player 
-        #call it after adding a new player to your list
-
-        #returns to update_my_list
-    end 
-
-    
-    
 
 
 end
