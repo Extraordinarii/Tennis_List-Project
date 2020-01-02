@@ -36,9 +36,12 @@ class CommandLineInterface
     end 
 
     def add_players(user_id)  ##passing user_id as soon as you log in 
-        Player.all.each do |player| 
-            puts player.name
-        end 
+        Player.all.each do |player|
+        final_follow_ids = Follow.find_by(user_id: user_id, player_id: player.id) 
+        if !final_follow_ids
+                puts player.name 
+            end     
+        end     
         puts "Please enter a player name you wish to follow"
         name = gets.chomp 
         searched_data = Player.find_by(name: name) ##later check if name already exists inside user list
