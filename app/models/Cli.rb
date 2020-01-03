@@ -19,20 +19,7 @@ class CommandLineInterface
             end 
         end
         Follow.delete(input_value[:value])
-        ## returns prompt of list of all players you currently have followed
-        ## then allows you to select to delete 
-        ## at end of list, allow to exit/go back to
         follow_menu(user_id) 
-    end 
-    def add_players_conditionals
-        #this method should; 
-        #check if a duplicate follow exists within the database
-
-        #allow users to search by 1 or 2 characters 
-        #then it should bring up a prompt to allow users to add  based on search result
-        #and allow user to exit if they want too
-
-
     end 
 
     def add_players(user_id)  ##passing user_id as soon as you log in 
@@ -47,10 +34,10 @@ class CommandLineInterface
 
         Follow.all.each do |follow| 
             
-            if follow.user_id == user_id 
-                puts "You have followed: " + follow.player.name
-            end
-            end 
+        if follow.user_id == user_id 
+            puts "You have followed: " + follow.player.name
+        end
+    end 
             
             choice = [{name: "Yes", value: 1},{name: "No", value: 2}]
             user_input = prompt.select("Would you like to add more players?", choice)
@@ -59,13 +46,6 @@ class CommandLineInterface
             elsif user_input == 2 
                 follow_menu(user_id)
             end 
-        ##prompt will ask "what is the name of the player you want to find "
-            ##find_name = gets.chomp 
-            ## Player.all.find_by ?
-            ##hey does gets.chomp == find_by name 
-
-        ###after adding player, returns follow list that includes new player then sends back to follow menu 
-        #follow_menu #this is follow menu
     end 
     
 def update_my_list(user_id) #this is the menu that holds add / delete 
@@ -79,7 +59,6 @@ def update_my_list(user_id) #this is the menu that holds add / delete
     elsif user_input == 3 #log out
         follow_menu(user_id)
     end
-    #add = find_by(name), #delete LIST ALL FOLLOWS, select to delete ie; pulls up prompt with your data 
 end 
 
 
@@ -114,13 +93,9 @@ def current_list_of_players(user_id)
         puts "no one, please add someone to see them in your list"
     end 
        puts "\n"
-    #prompt return
-    #return a list of players
 end 
 
 def follow_menu(user_id) #FOLLOW_MENU
-    #puts out information regarding list of players that you have
-    #while nil output "you currently aren't following anyone"
     puts "\n"
     print "Your current list contains "
      current_list_of_players(user_id)
@@ -129,11 +104,8 @@ def follow_menu(user_id) #FOLLOW_MENU
     choices = [{name: "Update my list", value: 1},{name: 'Return to main menu', value: 2},{name: 'Logout', value: 3}]
     user_input = prompt.select("Please make your choice", choices)
     follow_menu_selector(user_input, user_id)
-    #Follows.where()  ##user_id matches ? // ##current list of players
-    
-    #AT THE END IT GIVES OPTION TO UPDATE MY LIST LOG OUT OR MAIN MENU
-    
 end
+
 def main_menu_selector(user_input, user_id)
     if user_input == 1 
         follow_menu(user_id)  #list of players & search players
@@ -158,9 +130,22 @@ def main_menu(user_id)
 end
 
 def login_screen
-    # pastel = Pastel.new   ##we make this into a pretty front page
-    # font = TTY::Font.new()
-    # puts pastel.yellow.bold.detach(font.write('Tennis things!'))
+     font = TTY::Font.new()
+      pastel = Pastel.new   ##we make this into a pretty front page
+    thing = '
+    .                                 ____
+    |\                               /xxxx\
+    |X\                             |xxxxxx|
+     XX\         _    O_/           |xxxxxx|      _
+      XX\    o  (#)==_/\            \xxxxxx/     (~)
+       XX\             /\/           \xxxx/      
+        XX\           /               \--/
+         XX\.                          ||
+          XX|                          ||
+           X|                          []' 
+                    
+     puts pastel.yellow.bold(font.write('Just     Tennis     Things!'))
+     puts pastel.yellow.bold(thing)
 
     prompt = TTY::Prompt.new 
 
@@ -171,8 +156,6 @@ def login_screen
 end
 
 def runner(user_input)
-   # user_input = login_screen
-   # return login_screen if !user._a?(User)
     if user_input == 1 
         account_login
     elsif user_input == 2

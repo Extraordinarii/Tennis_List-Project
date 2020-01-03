@@ -10,3 +10,4 @@ gem "faker"
 gem 'tty-prompt'
 gem 'pastel'
 gem 'activerecord-reset-pk-sequence'
+gem 'tty-font'
