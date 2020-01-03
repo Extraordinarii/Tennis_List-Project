@@ -128,24 +128,28 @@ def main_menu(user_id)
     user_input = prompt.select("Please make your choice", choices)
     main_menu_selector(user_input, user_id)
 end
+def welcome_screen
+    font = TTY::Font.new()
+    pastel = Pastel.new   ##we make this into a pretty front page
+  thing = '
+  .                                 ____
+  |\                               /xxxx\
+  |X\                             |xxxxxx|
+   XX\         _    O_/           |xxxxxx|      _
+    XX\    o  (#)==_/\            \xxxxxx/     (~)
+     XX\             /\/           \xxxx/      
+      XX\           /               \--/
+       XX\.                          ||
+        XX|                          ||
+         X|                          []' 
+                  
+   puts pastel.yellow.bold(font.write('Just     Tennis     Things!'))
+   puts pastel.yellow.bold(thing)
+   login_screen
+end 
 
 def login_screen
-     font = TTY::Font.new()
-      pastel = Pastel.new   ##we make this into a pretty front page
-    thing = '
-    .                                 ____
-    |\                               /xxxx\
-    |X\                             |xxxxxx|
-     XX\         _    O_/           |xxxxxx|      _
-      XX\    o  (#)==_/\            \xxxxxx/     (~)
-       XX\             /\/           \xxxx/      
-        XX\           /               \--/
-         XX\.                          ||
-          XX|                          ||
-           X|                          []' 
-                    
-     puts pastel.yellow.bold(font.write('Just     Tennis     Things!'))
-     puts pastel.yellow.bold(thing)
+
 
     prompt = TTY::Prompt.new 
 
@@ -357,6 +361,6 @@ end
     
     
     def run 
-        login_screen ##calls the app to start up (the main login screen)
+        welcome_screen ##calls the app to start up (the main login screen)
     end 
 end 
