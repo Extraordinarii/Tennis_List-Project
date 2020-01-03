@@ -36,14 +36,12 @@ class CommandLineInterface
     end 
 
     def add_players(user_id)  ##passing user_id as soon as you log in 
-        Player.all.each do |player|
-        final_follow_ids = Follow.find_by(user_id: user_id, player_id: player.id) 
-        if !final_follow_ids
-                puts player.name 
-            end     
-        end     
+        prompt = TTY::Prompt.new 
         puts "Please enter a player name you wish to follow"
-        name = gets.chomp 
+        players = Player.all.filter do |player| 
+            !Follow.find_by(user_id: user_id, player_id: player.id)
+        end 
+        name = prompt.select('Type in the name', players.map{|player| player.name}, filter: true)
         searched_data = Player.find_by(name: name) ##later check if name already exists inside user list
         Follow.create(player_id: searched_data.id, user_id: user_id)
 
@@ -53,7 +51,7 @@ class CommandLineInterface
                 puts "You have followed: " + follow.player.name
             end
             end 
-            prompt = TTY::Prompt.new 
+            
             choice = [{name: "Yes", value: 1},{name: "No", value: 2}]
             user_input = prompt.select("Would you like to add more players?", choice)
             if user_input == 1 
