@@ -257,6 +257,7 @@ end
             end 
         end 
             random_gen_holder = fantasy_gen
+            binding.pry
         Match.create(player_one_id: player1_input[:value].id, player_two_id: player2_input[:value].id, score: random_gen_holder)
         main_menu(user_id)
     end 
@@ -267,25 +268,25 @@ end
             a = rand(0..7)
             b = 0
             if a <= 4
-            b = 6 
+                b = 6 
             end
             if a == 5 || a == 6
-            b = 7
+                b = 7
             end
             if a == 7
-            b = 6
+                b = 6
             end
         else 
             b = rand(0..7)
             a = 0
             if b <= 4
-            a = 6 
+                a = 6 
             end
             if b == 5 || b == 6
-            a = 7
+                a = 7
             end
             if b == 7
-            a = 6
+                a = 6
             end
         end
         set2_winner_toggle = rand(0..1)
@@ -293,70 +294,72 @@ end
             c = rand(0..7)
             d = 0 
             if c <= 4
-            d = 6
+                d = 6
             end
             if c == 5 || c == 6
-            d = 7
+                d = 7
             end
             if c == 7 
-            d = 6 
+                d = 6 
             end
         else
             d = rand(0..7)
             c = 0
             if d <= 4
-            c = 6
+                c = 6
             end 
             if d == 5 || d == 6
-            c = 7
+                c = 7
             end
             if d == 7
-            c = 6
+                c = 6
             end
         end
-            if a > b && c > d 
-                puts "#{a}-#{b}, #{c}-#{d}"
-                puts "Player 1 has won the match"
-            elsif b > a && d > c 
-                puts "#{a}-#{b}, #{c}-#{d}"
-                puts "Player 2 has won the match"
-            else
-                set3_winner_toggle = rand(0..1)
-                if set3_winner_toggle == 0 
-                    e = rand(0..7)
-                    f = 0
-                    if e <= 4
-                       f = 6 
-                    end
-                    if e == 5 || e == 6
-                       f = 7
-                    end
-                    if e == 7
-                    f = 6
-                    end
-                else
-                    f = rand(0..7)
-                    e = 0 
-                    if f <= 4
-                        e = 6
-                    end
-                    if f == 5 || f == 6
-                        e = 7
-                    end
-                    if f == 7 
-                    e = 6
-                    end
+        if a > b && c > d 
+            puts "#{a}-#{b}, #{c}-#{d}"
+            puts "Player 1 has won the match"
+            "#{a}-#{b}, #{c}-#{d}"
+        elsif b > a && d > c 
+            puts "#{a}-#{b}, #{c}-#{d}"
+            puts "Player 2 has won the match"
+            "#{a}-#{b}, #{c}-#{d}"
+        else
+            set3_winner_toggle = rand(0..1)
+            if set3_winner_toggle == 0 
+                e = rand(0..7)
+                f = 0
+                if e <= 4
+                    f = 6 
                 end
-                        if a > b && e > f || c > d && e > f 
-                            puts "Player 1 has won the match"
-                        puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
-                             "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
-                        else
-                            puts "Player 2 has won the match"
-                        puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
-                             "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
-                        end
+                if e == 5 || e == 6
+                    f = 7
+                end
+                if e == 7
+                f = 6
+                end
+            else
+                f = rand(0..7)
+                e = 0 
+                if f <= 4
+                    e = 6
+                end
+                if f == 5 || f == 6
+                    e = 7
+                end
+                if f == 7 
+                e = 6
+                end
             end
+            if a > b && e > f || c > d && e > f 
+                puts "Player 1 has won the match"
+                puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
+                "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
+            else
+                puts "Player 2 has won the match"
+                puts "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
+                "#{a}-#{b}, #{c}-#{d}, #{e}-#{f}"
+            end
+        end
     end
     
     
